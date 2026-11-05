@@ -128,7 +128,7 @@ Event_Management_API/
 ├── .env
 ├── .env.example
 ├── .gitignore
-├── requirement.txt
+├── requirements.txt
 └── README.md
 
 Installation and Setup
