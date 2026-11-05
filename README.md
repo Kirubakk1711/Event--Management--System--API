@@ -2,9 +2,11 @@ Event Management System API
 
 Project Overview
 
-The Event Management System API is a backend application developed using Python, FastAPI, and MySQL. It provides RESTful APIs to manage users, events, ticket types, bookings, payments, and notifications.
+The Event Management System API is a backend application developed using Python, FastAPI, and MySQL.
 
-The system supports role-based access control and secure authentication using JWT.
+It provides a complete backend solution for managing users, events, ticket types, bookings, payments, and notifications.
+
+The application includes secure authentication, role-based authorization, booking management, ticket availability validation, and administrative reporting.
 
 Technologies Used
 
@@ -14,50 +16,119 @@ Technologies Used
 - SQLAlchemy ORM
 - Pydantic
 - JWT Authentication
-- Passlib Password Hashing
 - Swagger UI
 - Postman
 - Git and GitHub
 
-Main Features
+Key Features
 
-1. User Registration and Login
-2. JWT Authentication and Role-Based Authorization
-3. Event Management (CRUD Operations)
-4. Event Search, Filtering, Sorting, and Pagination
-5. Ticket Type Management
-6. Ticket Booking and Booking History
-7. Booking Item Management
-8. Stock Validation and Overselling Prevention
-9. Booking Cancellation and Stock Restoration
-10. Simulated Payment Processing
-11. Payment History
-12. User Notifications
-13. Admin Dashboard and Reports
+1. User Management
+
+- User registration
+- User login
+- JWT-based authentication
+- Secure password handling
+
+2. Role-Based Access Control
+
+- Admin
+- Organizer
+- Customer
+- Role-based API authorization
+
+3. Event Management
+
+- Create events
+- View event details
+- Update events
+- Delete events
+- Search and filter events
+- Sorting and pagination
+
+4. Ticket Management
+
+- Create and manage ticket types
+- Set ticket prices
+- Manage ticket quantities
+- Track available ticket inventory
+- Activate and deactivate ticket types
+
+5. Booking Management
+
+- Create bookings
+- View booking history
+- Add booking items
+- Calculate booking totals
+- Cancel pending bookings
+- Restore ticket availability after cancellation
+
+6. Payment Management
+
+- Simulated payment processing
+- Payment status management
+- Booking payment validation
+- Payment history
+
+7. Notification Management
+
+- Generate notifications
+- View notifications
+- Mark notifications as read
+
+8. Admin Dashboard
+
+- View dashboard statistics
+- Monitor users and events
+- View booking reports
+- Track successful payments and revenue
 
 User Roles
 
-- Admin: Manages the system and views dashboard reports.
-- Organizer: Creates and manages events.
-- Customer: Searches events and books tickets.
+Role| Permissions
+Admin| Manage and monitor the system
+Organizer| Manage events and related activities
+Customer| Browse events, book tickets, and manage bookings
+
+Database
+
+Database Name: "event_management_db"
+
+The application uses MySQL with SQLAlchemy ORM.
+
+Main database tables include:
+
+- Users
+- Events
+- Ticket Types
+- Tickets
+- Bookings
+- Booking Items
+- Payments
+- Notifications
 
 Project Structure
 
 Event_Management_API/
 │
 ├── app/
-│   ├── models/
-│   ├── schemas/
 │   ├── routers/
-│   ├── dependencies/
+│   ├── schemas/
+│   ├── models/
+│   ├── services/
+│   ├── utils/
 │   ├── config.py
 │   ├── database.py
 │   └── main.py
 │
 ├── postman/
+│   └── Event Management API.postman_collection.json
+│
+├── tests/
+│
+├── .env
 ├── .env.example
 ├── .gitignore
-├── requirements.txt
+├── requirement.txt
 └── README.md
 
 Installation and Setup
@@ -76,86 +147,107 @@ python -m venv venv
 
 4. Activate the Virtual Environment
 
-Windows:
+For Windows:
 
 venv\Scripts\activate
 
 5. Install Dependencies
 
-pip install -r requirements.txt
+pip install -r requirement.txt
 
 Database Configuration
 
-Create a MySQL database:
+1. Open MySQL Workbench.
+2. Create the database:
 
 CREATE DATABASE event_management_db;
 
-Configure your database URL and JWT secret key in the ".env" file.
+3. Configure your database connection details in the ".env" file.
 
-Use ".env.example" as a reference for the required environment variables.
+Example:
 
-Do not upload your actual ".env" file or secret keys to GitHub.
+DATABASE_URL=mysql+pymysql://username:password@localhost/event_management_db
+
+Replace "username" and "password" with your own MySQL credentials.
+
+Do not upload your actual ".env" file or database credentials to GitHub.
 
 Run the Application
 
-Start the FastAPI development server:
+Start the FastAPI server using:
 
 uvicorn app.main:app --reload
 
+The application will run at:
+
+http://127.0.0.1:8000
+
 API Documentation
 
-After starting the server, access:
+FastAPI provides interactive API documentation through Swagger UI.
 
-- Swagger UI: http://127.0.0.1:8000/docs
-- ReDoc: http://127.0.0.1:8000/redoc
+Open the following URL in your browser:
 
-Authentication
+http://127.0.0.1:8000/docs
 
-The API uses JWT Bearer Token authentication.
+Swagger UI allows users to explore and test the available API endpoints.
 
-1. Register a user.
-2. Log in to obtain an access token.
-3. Click the Authorize button in Swagger UI.
-4. Enter the access token to access protected endpoints.
+Postman API Testing
 
-API Modules
+The project includes a Postman collection for API testing.
 
-Module| Description
-Users| Registration, login, authentication
-Events| Event CRUD and search
-Ticket Types| Ticket category and inventory
-Bookings| Booking creation and history
-Booking Items| Ticket quantity and stock validation
-Payments| Simulated payment processing
-Notifications| User notifications
-Admin| Dashboard and booking reports
+- Collection Name: Event Management API
+- Collection Format: Postman Collection v2.1
+- Collection File: "postman/Event Management API.postman_collection.json"
+
+Import Postman Collection
+
+1. Open Postman.
+2. Select Import.
+3. Choose the exported JSON collection file.
+4. Import the collection.
+5. Run the API requests to test the endpoints.
+
+The collection includes requests for user login, ticket booking, booking history, payments, notifications, admin dashboard, booking reports, and event management.
 
 Business Validations
 
-- Only authorized users can access protected endpoints.
-- Customers cannot create or manage organizer events.
-- Ticket quantities must be available before booking.
-- Overselling is prevented through stock validation.
-- Cancelled bookings cannot be paid.
-- Booking cancellation restores ticket availability.
-- Only pending bookings can be cancelled.
+The application implements important business validations, including:
+
+- Authentication and authorization checks.
+- Role-based access restrictions.
+- Ticket availability validation.
+- Prevention of ticket overselling.
+- Booking ownership validation.
+- Cancellation restricted to pending bookings.
+- Ticket quantity restoration after cancellation.
+- Payment restrictions for cancelled bookings.
 
 Payment Information
 
-The payment module uses simulated payment processing. No real money is transferred.
+This project uses simulated payment processing for demonstration and testing purposes. It does not process real financial transactions.
 
 Testing
 
-API endpoints are tested using:
+The APIs were tested using:
 
 - Swagger UI
 - Postman
 
+Testing includes successful API requests, authentication, role-based access, booking operations, ticket availability validation, payment processing, and notification management.
+
 Version Control
 
-The project source code is maintained using Git and GitHub.
+Git and GitHub are used for source code management and project version control.
+
+GitHub Repository:
+
+https://github.com/Kirubakk1711/Event--Management--System--API
 
 Author
 
 Kirubasri S
+
 Python Developer
+
+Event Management System API – Backend Development Project
